@@ -1,3 +1,9 @@
 .card {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
+.row{
+    margin-bottom: 20px;
+}
+.row .card .card-body button {
+margin-top: 10px;
+}
