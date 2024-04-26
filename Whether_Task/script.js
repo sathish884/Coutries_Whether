@@ -25,13 +25,13 @@ h1Tag.setAttribute('id', 'title');
 container.appendChild(h1Tag);
 
 // Fetch data from the provided URL
-fetch('https://raw.githubusercontent.com/rvsp/restcountries-json-data/master/res-countries.json')
+fetch('https://restcountries.com/v3.1/all')
     .then((response) => {
         return response.json(); // Parse the response as JSON
     })
     .then((data) => { // When data is retrieved successfully
         let rowCount = Math.ceil(data.length / 3); // Calculate the number of rows needed based on data length
-
+console.log(data);
         // Loop through the rows
         for (let i = 0; i < rowCount; i++) {
             let row = createElements('div', ['row']); // Create a row div element
@@ -45,27 +45,30 @@ fetch('https://raw.githubusercontent.com/rvsp/restcountries-json-data/master/res
                     // Create elements for displaying country information
                     let column = createElements('div', ['col-sm-6', 'col-md-4', 'col-lg-4', 'col-xl-4']);
                     let card = createElements('div', ['card', 'border-5', 'h-100']);
-                    let cardHead = createElements('div', ['card-header', 'p-3', 'text-center', 'bg-dark', 'text-white'], element.name);
+                    let cardHead = createElements('div', ['card-header', 'p-3', 'text-center', 'bg-dark', 'text-white'], element.name.common);
                     let cardBody = createElements('div', ['card-body', 'text-center']);
-                    let flagImage = createElements('img', ['img-thumbnail', 'mb-3', 'card-img-top']);
+
+                    let imgDiv = createElements('div', ['img-div', 'mb-3']);
+                    let flagImage = createElements('img', ['img-thumbnail', 'card-img-top']);
 
                     // Set attributes for the flag image
-                    flagImage.setAttribute('src', element.flag);
-                    flagImage.setAttribute('alt', element.name);
-                    flagImage.setAttribute('width', '200');
-                    flagImage.setAttribute('height', '100');
+                    flagImage.setAttribute('src', element.flags.png);
+                    flagImage.setAttribute('alt', element.flags.alt);
+                    // flagImage.setAttribute('width', '200');
+                    // flagImage.setAttribute('height', '200');
 
                     // Append flag image to card body
-                    cardBody.appendChild(flagImage);
+                    imgDiv.appendChild(flagImage)
+                    cardBody.appendChild(imgDiv);
 
                     // Create elements for country information
                     let nativeName = createElements('div', ['card-text']);
-                    nativeName.innerText = `Native Name : ${element.nativeName}`;
+                    nativeName.innerText = `Native Name : ${element.name.official}`;
                     let region = createElements('div', ['card-text']);
                     region.innerText = `Region : ${element.region}`;
                     let population = createElements('div', ['card-text']);
                     population.innerText = `Population : ${element.population}`;
-                    let countryCode = createElements('div', ['card-text'], `Country Code: ${element.alpha3Code}`);
+                    let countryCode = createElements('div', ['card-text'], `Country Code: ${element.idd.root}${element.idd.suffixes[0]}`);
                     let capital = createElements('div', ['card-text']);
                     capital.innerText = `Capital : ${element.capital}`;
                     let latlang = createElements('div', ['card-text'], `LatLang: (${element.latlng[0]}, ${element.latlng[1]})`);
@@ -73,7 +76,7 @@ fetch('https://raw.githubusercontent.com/rvsp/restcountries-json-data/master/res
 
                     // Add event listener for button click to fetch weather data
                     button.addEventListener('click', () => {
-                        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${element.name}&appid=ade33abcb26e1db2eba4c11dabe3a801&units=metric`)
+                        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${element.name.common}&appid=ade33abcb26e1db2eba4c11dabe3a801&units=metric`)
                             .then((resp) => {
                                 return resp.json(); // Parse response as JSON
                             })
